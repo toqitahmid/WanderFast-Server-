@@ -2,9 +2,13 @@ const express = require('express')
 const dotenv = require('dotenv')
 const app = express();
 dotenv.config();
-const PORT = process.env.PORT;
+const cors = require('cors')
 
+const PORT = process.env.PORT;
 const uri = process.env.MONGODB_URI;
+
+app.use(cors());
+app.use(express.json())
 
 const { MongoClient, ServerApiVersion } = require("mongodb");
 
@@ -26,6 +30,19 @@ async function run() {
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!",
     );
+
+    const db = client.db('wander_fast')
+    const destinationCollection = db.collection('destinations')
+
+    
+
+    app.post('/destination', async(req,res) => {
+        const destinationData = req.body
+        console.log(destinationData);
+        const result = await destinationCollection.insertOne(destinationData)
+        res.json(result);
+    })
+
   } 
   catch(err){
     console.log(err);
