@@ -34,13 +34,16 @@ async function run() {
     const db = client.db('wander_fast')
     const destinationCollection = db.collection('destinations')
 
-    
+    app.get('/destination', async(req,res) => {
+      const result = await destinationCollection.find().toArray()
+      res.send(result);
+    })
+
 
     app.post('/destination', async(req,res) => {
-        const destinationData = req.body
-        console.log(destinationData);
-        const result = await destinationCollection.insertOne(destinationData)
-        res.json(result);
+      const destinationData = req.body
+      const result = await destinationCollection.insertOne(destinationData);
+      res.send(result);
     })
 
   } 
